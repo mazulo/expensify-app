@@ -11,6 +11,7 @@ export default class ExpenseForm extends React.Component {
         note: '',
         createdAt: moment(),
         calendarFocused: false,
+        error: '',
     }
     onAmountChange = (e) => {
         const amount = e.target.value;
@@ -27,15 +28,46 @@ export default class ExpenseForm extends React.Component {
         this.setState(() => ({ note }));
     }
     onDateChange = (createdAt) => {
-        this.setState(() => ({ createdAt }));
+        if (createdAt) {
+            this.setState(() => ({ createdAt }));
+        }
     }
     onFocusChange = ({ focused }) => {
         this.setState(() => ({ calendarFocused: focused }));
     }
+    onSubmit = (e) => {
+        e.preventDefault();
+        const {
+            amount,
+            createdAt,
+            description,
+            note
+        } = this.state;
+
+        if (!description || !amount) {
+            this.setState(
+                () => ({ error: 'Please provide description and amount' })
+            );
+        } else {
+            this.setState(
+                () => ({ error: '' })
+            );
+            this.props.onSubmit({
+                amount: parseFloat(amount, 10) * 100,
+                createdAt: createdAt.valueOf(),
+                description,
+                note,
+            });
+        }
+    }
     render() {
         return (
             <div>
-                <form>
+                <form onSubmit={ this.onSubmit }>
+                    {
+                        this.state.error &&
+                        <span>{ this.state.error }</span>
+                    }
                     <input type="text"
                         placeholder="Description"
                         autoFocus
@@ -60,6 +92,7 @@ export default class ExpenseForm extends React.Component {
                         value={ this.state.note }
                         onChange={ this.onNoteChange }
                     ></textarea>
+                    <button>Add expense</button>
                 </form>
             </div>
         )
