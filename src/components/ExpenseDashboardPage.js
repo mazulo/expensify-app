@@ -3,7 +3,7 @@ import React from 'react';
 import ExpenseList from './ExpenseList';
 import ExpenseListFilter from './ExpenseListFilter';
 
-const ExpenseDashboardPage = () => (
+export const ExpenseDashboardPage = () => (
   <div>
     <ExpenseListFilter />
     <ExpenseList />
